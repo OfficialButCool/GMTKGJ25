@@ -1,17 +1,44 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
-    public float jumpforce = 10f;
-    public string horizontalInput = "Horizontal";
-    public string jumpInput = "Jump";
+    public float jumpForce = 20f;
+
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.3f;
+    public LayerMask groundLayer;
 
     private Rigidbody2D rb;
-    private bool isGrounded = false;
+    private bool isGrounded;
+    private Vector2 moveInput;
+    private bool jumpPressed;
 
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
+    private PlayerInput playerInput;
+    private InputAction moveAction;
+    private InputAction jumpAction;
+
+    void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        if (playerInput == null)
+        {
+            Debug.LogError("PlayerInput component missing!");
+            return;
+        }
+
+        moveAction = playerInput.actions["Move"];
+        if (moveAction == null)
+        {
+            Debug.LogError("Move action not found in Input Actions!");
+        }
+        jumpAction = playerInput.actions["Jump"];
+         if (jumpAction == null)
+    {
+        Debug.LogError("Jump action not found in Input Actions!");
+    }
+    }
 
     void Start()
     {
@@ -20,14 +47,34 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        float move = Input.GetAxisRaw(horizontalInput);
-        rb.linearVelocity = new Vector2(move * speed, rb.linearVelocity.y);
+        moveInput = moveAction.ReadValue<Vector2>();
+        jumpPressed = jumpAction.WasPressedThisFrame();
 
-        if (Input.GetButtonDown(jumpInput) && isGrounded)
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (jumpPressed && isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpforce);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
-    } 
+        rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
+
+        void OnDrawGizmosSelected()
+{
+             if (groundCheck != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+            }
+}
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
 }
