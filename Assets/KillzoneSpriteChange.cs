@@ -41,7 +41,18 @@ public class KillzoneSpriteChange : MonoBehaviour
             PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
             if (respawn != null)
             {
-                respawn.Respawn();
+                PlayerGroupManager groupManager = FindObjectOfType<PlayerGroupManager>();
+                if (groupManager != null)
+                {
+                    // If a PlayerGroupManager is found, use it to respawn both players 
+                    groupManager.KillBothPlayers();
+                }
+                else
+                {
+                // If no PlayerGroupManager is found, respawn the player directly
+                respawn.Respawn(); // fallback in case manager isn't assigned
+                }
+
             }
         }
     }
