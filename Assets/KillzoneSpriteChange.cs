@@ -2,41 +2,42 @@ using UnityEngine;
 
 public class KillzoneSpriteChange : MonoBehaviour
 {
-    public Sprite deadSprite;                // Assign the "dead" sprite in Inspector
-    public Vector2 deadColliderOffset = new Vector2(0f, -0.3f);  // Adjust as needed
+    public Sprite deadSprite;
+    public Vector2 deadColliderOffset = new Vector2(0f, -0.3f);
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            // Change the player's sprite to the dead sprite
-            SpriteRenderer playerSpriteRenderer = other.GetComponent<SpriteRenderer>();
-            if (playerSpriteRenderer != null && deadSprite != null)
+            // 1. Change to dead sprite directly
+            SpriteRenderer sr = other.GetComponent<SpriteRenderer>();
+            if (sr != null && deadSprite != null)
             {
-                playerSpriteRenderer.sprite = deadSprite;
+                sr.sprite = deadSprite;
             }
 
-            // Adjust the player's collider offset if using CapsuleCollider2D
-            CapsuleCollider2D playerCollider = other.GetComponent<CapsuleCollider2D>();
-            if (playerCollider != null)
+            // 2. Adjust collider offset
+            CapsuleCollider2D col = other.GetComponent<CapsuleCollider2D>();
+            if (col != null)
             {
-                playerCollider.offset = deadColliderOffset;
+                col.offset = deadColliderOffset;
             }
 
-            // Disable movement
+            // 3. Stop movement
             Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.velocity = Vector2.zero;  // Stop sliding
+                rb.velocity = Vector2.zero;
             }
 
-             PlayerController controller = other.GetComponent<PlayerController>();
+            // 4. Prevent control
+            PlayerController controller = other.GetComponent<PlayerController>();
             if (controller != null)
             {
-                controller.canMove = false; // Prevent further movement
+                controller.canMove = false;
             }
 
-            // Trigger respawn with black screen delay
+            // 5. Respawn
             PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
             if (respawn != null)
             {
