@@ -15,9 +15,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private bool jumpPressed;
 
+    public bool canMove = true;
+
+
     private PlayerInput playerInput;
     private InputAction moveAction;
     private InputAction jumpAction;
+
+    private bool isDead = false; // 🔹 New flag
 
     void Awake()
     {
@@ -33,11 +38,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Move action not found in Input Actions!");
         }
+
         jumpAction = playerInput.actions["Jump"];
-         if (jumpAction == null)
-    {
-        Debug.LogError("Jump action not found in Input Actions!");
-    }
+        if (jumpAction == null)
+        {
+            Debug.LogError("Jump action not found in Input Actions!");
+        }
     }
 
     void Start()
@@ -47,27 +53,21 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
-        jumpPressed = jumpAction.WasPressedThisFrame();
+        if (!canMove) return; // skip movement
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+         moveInput = moveAction.ReadValue<Vector2>();
+         jumpPressed = jumpAction.WasPressedThisFrame();
 
-        if (jumpPressed && isGrounded)
+         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+         if (jumpPressed && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
-        rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
-
-        void OnDrawGizmosSelected()
-{
-             if (groundCheck != null)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-            }
-}
+         rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
     }
+
 
     void OnDrawGizmosSelected()
     {
@@ -76,5 +76,18 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
+    }
+
+    // 🔹 Call when player dies
+    public void DisableMovement()
+    {
+        isDead = true;
+        rb.velocity = Vector2.zero;
+    }
+
+    // 🔹 Call when player respawns
+    public void EnableMovement()
+    {
+        isDead = false;
     }
 }

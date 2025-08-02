@@ -6,6 +6,7 @@ public class CheckpointWithRoomLoader : MonoBehaviour
     public GameObject[] roomsToDisable;
 
     private AudioSource audioSource;
+    private bool hasTriggered = false; // Prevents re-triggering
 
     private void Start()
     {
@@ -14,7 +15,11 @@ public class CheckpointWithRoomLoader : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (hasTriggered) return; // Already triggered once
+
         if (!other.CompareTag("Player")) return;
+
+        hasTriggered = true; // Mark as triggered
 
         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
         if (respawn != null)
