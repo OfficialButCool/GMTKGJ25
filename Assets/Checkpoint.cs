@@ -1,17 +1,40 @@
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour
+public class CheckpointWithRoomLoader : MonoBehaviour
 {
+    public GameObject[] roomsToEnable;
+    public GameObject[] roomsToDisable;
+
+    private AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+        if (respawn != null)
         {
-            PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
-            if (respawn != null)
-            {
-                respawn.SetCheckpoint(transform.position);
-            }
+            respawn.SetCheckpoint(transform.position);
+        }
+
+        if (audioSource != null)
+        {
+            audioSource.Play();
+        }
+
+        foreach (GameObject room in roomsToEnable)
+        {
+            if (room != null) room.SetActive(true);
+        }
+
+        foreach (GameObject room in roomsToDisable)
+        {
+            if (room != null) room.SetActive(false);
         }
     }
 }
-

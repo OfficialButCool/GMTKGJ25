@@ -2,32 +2,33 @@ using UnityEngine;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    public float fallThreshold = 10f; // How far below checkpoint before respawn
     private Vector2 checkpoint;
     private Rigidbody2D rb;
+    private AudioSource audioSource;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        checkpoint = transform.position; // Start point
-    }
-
-    void Update()
-    {
-        if (transform.position.y < checkpoint.y - fallThreshold)
-        {
-            Respawn();
-        }
+        checkpoint = transform.position; // Starting checkpoint
+        Debug.Log("Initial checkpoint set to: " + checkpoint);
     }
 
     public void SetCheckpoint(Vector2 newCheckpoint)
     {
         checkpoint = newCheckpoint;
+        Debug.Log("Checkpoint updated to: " + checkpoint);
     }
 
     public void Respawn()
     {
-        rb.velocity = Vector2.zero; // Reset motion
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(audioSource.clip);
+
+        }
+        rb.velocity = Vector2.zero;
         transform.position = checkpoint;
+        Debug.Log("Respawned at: " + checkpoint);
     }
 }
