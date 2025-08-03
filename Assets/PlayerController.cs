@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
 
-    private bool isDead = false; // 🔹 New flag
+    public bool isDead = false; // 🔹 New flag
 
     // --- New sprite fields ---
     public Sprite idleRightSprite;

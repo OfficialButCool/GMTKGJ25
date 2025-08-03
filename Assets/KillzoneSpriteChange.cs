@@ -5,6 +5,9 @@ public class KillzoneSpriteChange : MonoBehaviour
     public Sprite deadSprite;
     public Vector2 deadColliderOffset = new Vector2(0f, -0.3f);
 
+    [Header("Dead Body Stacking")]
+    public GameObject deadBodyPrefab; // Assign a prefab with sprite in Inspector
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -37,6 +40,12 @@ public class KillzoneSpriteChange : MonoBehaviour
                 controller.canMove = false;
             }
 
+            // 🔹 4.5 Spawn dead body clone
+            if (deadBodyPrefab != null)
+            {
+                Instantiate(deadBodyPrefab, other.transform.position, other.transform.rotation);
+            }
+
             // 5. Respawn
             PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
             if (respawn != null)
@@ -49,10 +58,9 @@ public class KillzoneSpriteChange : MonoBehaviour
                 }
                 else
                 {
-                // If no PlayerGroupManager is found, respawn the player directly
-                respawn.Respawn(); // fallback in case manager isn't assigned
+                    // If no PlayerGroupManager is found, respawn the player directly
+                    respawn.Respawn(); // fallback in case manager isn't assigned
                 }
-
             }
         }
     }

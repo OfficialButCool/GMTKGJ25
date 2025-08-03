@@ -20,6 +20,17 @@ public class PlayerSpriteManager : MonoBehaviour
             originalColliderOffset = capsuleCollider.offset;
     }
 
+    // Call this to set the dead sprite and offset
+    public void SetDeadSprite(Sprite deadSprite, Vector2 deadOffset)
+    {
+        if (spriteRenderer != null && deadSprite != null)
+            spriteRenderer.sprite = deadSprite;
+
+        if (capsuleCollider != null)
+            capsuleCollider.offset = deadOffset;
+    }
+
+    // Call this to restore original sprite and collider offset
     public void RestoreOriginalSprite()
     {
         if (spriteRenderer != null && originalSprite != null)
@@ -27,5 +38,15 @@ public class PlayerSpriteManager : MonoBehaviour
 
         if (capsuleCollider != null)
             capsuleCollider.offset = originalColliderOffset;
+    }
+
+    // Call this when respawning to update the original sprite and collider offset
+    public void UpdateOriginalState()
+    {
+        if (spriteRenderer != null)
+            originalSprite = spriteRenderer.sprite;
+
+        if (capsuleCollider != null)
+            originalColliderOffset = capsuleCollider.offset;
     }
 }

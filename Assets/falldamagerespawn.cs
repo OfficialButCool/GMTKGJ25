@@ -82,12 +82,19 @@ public class PlayerRespawn : MonoBehaviour
         if (spriteManager != null)
         {
             spriteManager.RestoreOriginalSprite();
+            spriteManager.UpdateOriginalState(); // Update baseline to current sprite after respawn
         }
 
         // Re-enable movement after respawn
         if (playerController != null)
         {
             playerController.canMove = true;
+        }
+
+        // Re-enable physics on player Rigidbody
+        if (rb != null)
+        {
+            rb.isKinematic = false;
         }
 
         if (blackScreenUI != null && blackScreenCanvasGroup != null)
@@ -105,3 +112,4 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 }
+
