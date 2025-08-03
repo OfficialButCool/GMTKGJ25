@@ -6,8 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MAIN MENU.unity
+    guid: 7c7df89ebd068964ab1e8cd0f5ca7c76
+  - enabled: 1
+    path: Assets/Scenes/start cutscene.unity
+    guid: bde30b08d83748a438b01df8e6925a32
+  - enabled: 1
     path: Assets/Scenes/MAINGAME.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/endcutscene.unity
+    guid: 081c744bb63149c4893b37d256433855
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
