@@ -4,8 +4,8 @@ using System.Collections;
 
 public class SceneFadeTrigger : MonoBehaviour
 {
-    [Header("endcutscene")]
-    public string endcutscene = "endcutscene";
+    [Header("Scene to Load (Build Index)")]
+    public int sceneBuildIndex; // Set this in the Inspector
 
     [Header("Fade UI CanvasGroup")]
     public CanvasGroup fadeCanvasGroup;
@@ -35,8 +35,6 @@ public class SceneFadeTrigger : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.LoadScene(endcutscene);
+        SceneManager.LoadScene(sceneBuildIndex);
     }
 }
-
-
